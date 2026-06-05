@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from .logger import get_logger
+from trukernel.logger import get_logger
 
 
 def _strip_quotes(value: str) -> str:
