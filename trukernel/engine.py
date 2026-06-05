@@ -2,19 +2,22 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import shlex
 import subprocess
 import sys
+import threading
 from pathlib import Path
 from typing import Any
 
-from ..utils.logger import get_logger
-from ..utils.manifest_parser import parse_manifest
+from trukernel.logger import get_logger
+from trukernel.parser import parse_manifest
 
 # Sentinel value returned when user types 'exit'
 EXIT_SENTINEL = "__TRUKERNEL_EXIT__"
 
 
 _kernel_instance: TruKernel | None = None
+_kernel_lock = threading.Lock()
 
 class TruKernel:
     """Central manifest-driven dispatch engine for TruKernel."""
@@ -189,8 +192,8 @@ class TruKernel:
 
         try:
             result = subprocess.run(
-                full_cmd,
-                shell=True,
+                shlex.split(full_cmd),
+                shell=False,
                 capture_output=True,
                 text=True,
             )
